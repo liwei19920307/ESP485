@@ -227,9 +227,33 @@ sensor:
 
 ### `固件`
 
-`稍后更新...`
+由于目前`ESPHome`官方还没完全支持`ESP32-C3`和`Modubus`，`docker`版本和`pip`默认安装的版本都无法编译，所以需要手动安装旧的版本后编译
 
-请参考 [tasmota-doc](https://tasmota.github.io/docs/ESP32/) [tasmota-git](https://github.com/tasmota/install/tree/main/static/esp32-c3)
+安装esphome
+
+```
+sudo pip3 install esphome==2021.9.0
+```
+
+编译
+
+```
+esphome esp485.yaml compile
+```
+
+编译完固件位置
+
+```
+esp485/.pioenvs/esp485/firmware.bin
+```
+
+刷机命令（提前安装好esptool.py，辅助bin文件可以从firmware文件夹取或从[tasmota-git](https://github.com/tasmota/install/tree/main/static/esp32-c3)）
+
+请参考 [tasmota-doc](https://tasmota.github.io/docs/ESP32/) 
+
+```
+sudo esptool.py --chip esp32c3 --port /dev/ttyUSB0（Win为COM1...口） --baud 460800 --before default_reset --after hard_reset write_flash -z --flash_mode dout --flash_freq 40m --flash_size detect 0x0000 bootloader_dout_40m.bin 0x8000 partitions.bin 0xe000 boot_app0.bin 0x10000 firmware.bin
+```
 
 ### `HASS`
 
