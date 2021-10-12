@@ -248,6 +248,7 @@ esp485/.pioenvs/esp485/firmware.bin
 ```
 
 刷机命令（提前安装好esptool.py，辅助bin文件可以从firmware文件夹取或从[tasmota-git](https://github.com/tasmota/install/tree/main/static/esp32-c3)）
+
 请参考 [tasmota-doc](https://tasmota.github.io/docs/ESP32/) 
 
 ```
