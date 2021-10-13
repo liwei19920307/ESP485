@@ -55,7 +55,7 @@
 
 ### `焊接`
 
-按PCB标注焊接即可，注意ESP-C3-13U的焊接，缝隙很小，一定要对其
+按`PCB`标注焊接即可，注意`ESP-C3-13U`的焊接，缝隙很小，一定要对其
 
 ## `软件`
 
@@ -227,12 +227,12 @@ sensor:
 
 ### `固件`
 
-由于目前`ESPHome`官方还没完全支持`ESP32-C3`和`Modubus`，`docker`版本和`pip`默认安装的版本都无法编译，所以需要手动安装旧的版本后编译
+由于目前`ESPHome`官方还没完全支持`ESP32-C3`和`Modubus`，`docker`版本无法编译，需要手动安装后编译
 
 安装esphome
 
 ```
-sudo pip3 install esphome==2021.9.0
+sudo pip3 install esphome==2021.9.3
 ```
 
 编译
@@ -247,7 +247,7 @@ esphome esp485.yaml compile
 esp485/.pioenvs/esp485/firmware.bin
 ```
 
-刷机命令（提前安装好esptool.py，辅助bin文件可以从firmware文件夹取或从[tasmota-git](https://github.com/tasmota/install/tree/main/static/esp32-c3)）
+刷机命令（提前安装好`esptool.py`，辅助`bin`文件可以从`firmware`文件夹取或从[tasmota-git](https://github.com/tasmota/install/tree/main/static/esp32-c3)）
 
 请参考 [tasmota-doc](https://tasmota.github.io/docs/ESP32/) 
 
@@ -270,11 +270,11 @@ sudo esptool.py --chip esp32c3 --port /dev/ttyUSB0（Win为COM1...口） --baud 
 
 ## `DIY`
 
-请参考之前DIY的[步骤](https://github.com/liwei19920307/S5in1#%E6%AD%A5%E9%AA%A4)
+请参考之前`DIY`的[步骤](https://github.com/liwei19920307/S5in1#%E6%AD%A5%E9%AA%A4)
 
 ### `注意`
 
-1、`EPS-C3-13U`进入下载模式只需要通电前将IO9接地，接法如下图
+1、`EPS-C3-13U`进入下载模式只需要通电前将`IO9`接地，接法如下图
 
 ![TTL](./img/TTL.png)
 
