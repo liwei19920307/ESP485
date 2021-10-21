@@ -65,21 +65,18 @@
 
 ```yaml
 esphome:
-  name: esp485
+  name: esp32_c3_test
   platform: ESP32
-  board: esp32-c3-devkitm-1  
+  board: esp32-c3-devkitm-1
   platformio_options:
-    platform: https://github.com/platformio/platform-espressif32#feature/arduino-idf-master
+    platform: https://github.com/platformio/platform-espressif32.git#feature/arduino-upstream
+    platform_packages:
+      - framework-arduinoespressif32@https://github.com/espressif/arduino-esp32.git#2.0.0
+    board_build.variant: esp32c3
+    board_build.f_cpu: 160000000L
     board_build.f_flash: 40000000L
+    upload_protocol: esptool
     board_build.flash_mode: dio
-    board_build.flash_size: 4MB
-
-external_components:
-  - source:
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: dev
-    components: [ modbus, modbus_controller ]
 
 wifi:
   ssid: "#WIFI名称#"
