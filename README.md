@@ -114,7 +114,7 @@ modbus:
 modbus_controller:
   - id: esp485_modbus_controller
     modbus_id: esp485_modbus
-    address: 0x1 #设备地址码（一般是1根据实际情况填）#
+    address: 0x01 #设备地址码（一般是1根据实际情况填）#
     command_throttle: 200ms
     setup_priority: -10
     update_interval: 10s
