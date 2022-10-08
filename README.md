@@ -93,13 +93,6 @@ wifi:
 web_server:
   port: 80
 
-esp32_ble_tracker:
-  scan_parameters:
-    active: true
-
-bluetooth_proxy:
-  active: true
-
 button:
   - platform: restart
     name: ${device_name}_reboot
