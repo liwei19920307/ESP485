@@ -64,6 +64,13 @@ esphome:
     platform_packages:
       - framework-arduinoespressif32@https://github.com/espressif/arduino-esp32.git#2.0.3
     board_build.flash_mode: dio
+  on_boot:
+    - priority: 600
+      then:
+        - esp32_ble_tracker.stop_scan:
+    - priority: 200
+      then:
+        - esp32_ble_tracker.start_scan:
 
 esp32:
   board: esp32-c3-devkitm-1
