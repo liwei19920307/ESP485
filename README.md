@@ -1,11 +1,10 @@
-
 # ESP485
 
 ## 简介
 
 讨论群: `810581215`
 
-在`1.0`基础上添加`TYPE-C`接口方便刷机，替换`C3`模块为乐鑫的（安信可和乐鑫关系崩了），`PCB`兼容两个版本的`C3`模块，不带天线`ESP32-C3-WROOM-02U-N4`（方便放入正泰模数化插座）和带天线`ESP32-C3-WROOM-02-H4`	（适合不用壳TYPE-C供电裸奔的）
+在 1.0 基础上添加 TYPE-C 接口方便刷机，替换 C3 模块为乐鑫的（安信可和乐鑫关系崩了），PCB 兼容两个版本的 C3 模块，不带天线 ESP32-C3-WROOM-02U-N4（方便放入正泰模数化插座）和带天线 ESP32-C3-WROOM-02-H4 （适合不用壳 TYPE-C 供电裸奔的）
 
 ![ESP485_2.0_1](./img/ESP485_2.0_1.png)
 
@@ -23,21 +22,21 @@
 
 ### `材料清单`
 
-# 一定要买`MODBUS`版本电表！！！
+# 一定要买 MODBUS 版本电表！！！
 
-| 名称 | 型号 | 数量 | PCB标注 | 链接 |
-| ----- | ----- | ----: | :----: | :----: |
-| ESP32-C3-WROOM-02U-N4 | | 1 | ESP32-C3-WROOM-02-H4 | [购买](https://item.taobao.com/item.htm?id=676812781013) |
-| ME1117A33B3G 稳压电源芯 |  | 1 | 1117-3 | [购买](https://item.taobao.com/item.htm?id=645921052512) |
-| MAX13487EESA SOIC-8 | - | 1 | 485 | [购买](https://item.taobao.com/item.htm?id=549097263944) |
-| 0603贴片电阻 4.7KΩ | - | 1 | R1/R2 | [购买](https://item.taobao.com/item.htm?id=525820369368) |
-| 0603贴片电容 50V 100NF ±10% | - | 1 | C1 | [购买](https://item.taobao.com/item.htm?id=537743724825) |
-| 2.4G内置柔性FPC软天线  | IPEX接头 | 1 | - | [购买](https://item.taobao.com/item.htm?id=574057911861) |
-| Type-C母座 16P |  | 1 | TYPE-C | [购买](https://item.taobao.com/item.htm?&id=573090887123) |
-| 220V转5V700mA电源模块 | 5V700mA | 1 | - | [购买](https://detail.tmall.com/item.htm?id=543443029399) |
-| 正泰DDSU666  | 5-80A  ModBus | 1 | - | [购买](https://item.taobao.com/item.htm?id=38682717986) |
-| 正泰模数化插座  | AC30-103 | 1 | - | [购买](https://item.taobao.com/item.htm?id=38332829590) |
-| ESP32-C3-WROOM-02-H4 |  | 1 | ESP32-C3-WROOM-02-H4 | [购买](https://item.taobao.com/item.htm?id=672590753429) |
+| 名称                         | 型号         | 数量 |       PCB 标注       |                           链接                            |
+| ---------------------------- | ------------ | ---: | :------------------: | :-------------------------------------------------------: |
+| ESP32-C3-WROOM-02U-N4        | -            |    1 | ESP32-C3-WROOM-02-H4 | [购买](https://item.taobao.com/item.htm?id=676812781013)  |
+| ME1117A33B3G 稳压电源芯      | -            |    1 |        1117-3        | [购买](https://item.taobao.com/item.htm?id=645921052512)  |
+| MAX13487EESA SOIC-8          | -            |    1 |         485          | [购买](https://item.taobao.com/item.htm?id=549097263944)  |
+| 0603 贴片电阻 4.7KΩ          | -            |    1 |        R1/R2         | [购买](https://item.taobao.com/item.htm?id=525820369368)  |
+| 0603 贴片电容 50V 100NF ±10% | -            |    1 |          C1          | [购买](https://item.taobao.com/item.htm?id=537743724825)  |
+| 2.4G 内置柔性 FPC 软天线     | IPEX 接头    |    1 |          -           | [购买](https://item.taobao.com/item.htm?id=574057911861)  |
+| Type-C 母座 16P              | -            |    1 |        TYPE-C        | [购买](https://item.taobao.com/item.htm?&id=573090887123) |
+| 220V 转 5V700mA 电源模块     | 5V700mA      |    1 |          -           | [购买](https://detail.tmall.com/item.htm?id=543443029399) |
+| 正泰 DDSU666                 | 5-80A ModBus |    1 |          -           |  [购买](https://item.taobao.com/item.htm?id=38682717986)  |
+| 正泰模数化插座               | AC30-103     |    1 |          -           |  [购买](https://item.taobao.com/item.htm?id=38332829590)  |
+| ESP32-C3-WROOM-02-H4         | -            |    1 | ESP32-C3-WROOM-02-H4 | [购买](https://item.taobao.com/item.htm?id=672590753429)  |
 
 ### `焊接`
 
@@ -64,7 +63,7 @@ esp32:
 logger:
 
 api:
-  encryption: 
+  encryption:
     key: !secret api_encryption_key
 
 ota:
@@ -81,11 +80,11 @@ web_server:
 button:
   - platform: restart
     name: ${device_name}_reboot
-  
+
 time:
   - platform: sntp
     id: ${device_name}_time
-  
+
 uart:
   id: ${device_name}_uart
   rx_pin: 5
@@ -131,7 +130,7 @@ sensor:
     value_type: FP32
     accuracy_decimals: 1
     device_class: voltage
-    
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
     id: ${device_name}_i
@@ -143,7 +142,7 @@ sensor:
     value_type: FP32
     accuracy_decimals: 3
     device_class: current
-    
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
     id: ${device_name}_p
@@ -157,7 +156,7 @@ sensor:
     filters:
       - multiply: 1000
     device_class: power
-    
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
     id: ${device_name}_q
@@ -171,7 +170,7 @@ sensor:
     filters:
       - multiply: 1000
     device_class: power
-    
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
     id: ${device_name}_s
@@ -185,7 +184,7 @@ sensor:
     filters:
       - multiply: 1000
     device_class: power
-    
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
     id: ${device_name}_pf
@@ -196,7 +195,7 @@ sensor:
     value_type: FP32
     accuracy_decimals: 3
     device_class: power_factor
-    
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
     id: ${device_name}_freq
@@ -207,7 +206,7 @@ sensor:
     register_type: holding
     value_type: FP32
     accuracy_decimals: 2
-    
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
     id: ${device_name}_ep
@@ -234,7 +233,7 @@ sensor:
 
 ![Modbus-RTU_2](./img/Modbus-RTU_2.png)
 
-[DDSU666说明书](https://github.com/liwei19920307/ESP485/tree/main/doc/DDSU666.pdf)
+[DDSU666 说明书](https://github.com/liwei19920307/ESP485/tree/main/doc/DDSU666.pdf)
 
 ### `注意`
 
