@@ -5,49 +5,43 @@
 
 讨论群: `810581215`
 
-[群友Carl的详细教程](https://songlin.me/2021/11/14/ddsu666-esp485/)
+在1.0基础上添加TYPE-C接口方便刷机，替换C3模块为乐鑫的（安信可和乐鑫关系崩了），PCB兼容两个版本的C3模块，不带天线ESP32-C3-WROOM-02U-N4（方便放入正泰模数化插座）和带天线ESP32-C3-WROOM-02-H4	（适合不用壳TYPE-C供电裸奔的）
 
-最近`Home Assistant`新增了<u>**`能源`**</u>模块，公司的项目又正好是数据采集相关的，看了下市面上卖的`Modbus`透传模块价格都不低，于是有了自己做的想法。请教硬件朋友，拿到了最简单的`485`转`TTL`电路。等了很久最近`ESPHome`终于初步支持了基于`RISC-V`架构的`ESP32-C3`（极低功耗、`CPU`温度、蓝牙`5.0`、`160 MHz`...非常强）。于是直接二者结合，搞出了指甲盖大小的`485`透传模块。把模块和变压器塞进了`正泰`导轨式模数化插座里（一举两得），测试电表用的是`正泰`的`DDSU666`（理论上支持所有`Modbus`设备数据透传）
+![ESP485_2.0_1](./img/ESP485_2.0_1.png)
 
-![ESP485_1](./img/ESP485_1.jpeg)
+![ESP485_2.0_2](./img/ESP485_2.0_2.png)
 
-![ESP485_2](./img/ESP485_2.jpeg)
+![ESP485_2.0_3](./img/ESP485_2.0_3.png)
 
-![INSTALL_3](./img/INSTALL_3.png)
+![ESP485_2.0_4](./img/ESP485_2.0_4.png)
 
-![INSTALL_4](./img/INSTALL_4.png)
+![ESP485_2.0_5](./img/ESP485_2.0_5.png)
 
-![INSTALL_5](./img/INSTALL_5.png)
-
-![INSTALL_6](./img/INSTALL_6.jpeg)
-
-![INSTALL_7](./img/INSTALL_7.png)
-
-![HASS_2](./img/HASS_2.png)
+![TB](./img/TB.png)
 
 ## `硬件`
 
 ### `材料清单`
 
-清单只包含关键材料，不包含焊接工具、线材、刷机工具等辅助工具
-
-# 一定要买MODBUS版本额电表！！！
+# 一定要买MODBUS版本电表！！！
 
 | 名称 | 型号 | 数量 | PCB标注 | 链接 |
 | ----- | ----- | ----: | :----: | :----: |
-| ESP-C3-13U | 4M | 1 | ESP-C3-13U | [购买](https://item.taobao.com/item.htm?id=652413887471) |
-| AMS1117-3.3 稳压电源芯片降压IC | AMS1117-3.3 | 1 | U1 | [购买](https://item.taobao.com/item.htm?id=522579028878) |
-| MAX13487EESA SOIC-8 | - | 1 | U2 | [购买](https://item.taobao.com/item.htm?id=549097263944) |
+| ESP32-C3-WROOM-02U-N4 | | 1 | ESP32-C3-WROOM-02-H4 | [购买](https://item.taobao.com/item.htm?id=676812781013) |
+| ME1117A33B3G 稳压电源芯 |  | 1 | 1117-3 | [购买](https://item.taobao.com/item.htm?id=645921052512) |
+| MAX13487EESA SOIC-8 | - | 1 | 485 | [购买](https://item.taobao.com/item.htm?id=549097263944) |
 | 0603贴片电阻 4.7KΩ | - | 1 | R1/R2 | [购买](https://item.taobao.com/item.htm?id=525820369368) |
 | 0603贴片电容 50V 100NF ±10% | - | 1 | C1 | [购买](https://item.taobao.com/item.htm?id=537743724825) |
 | 2.4G内置柔性FPC软天线  | IPEX接头 | 1 | - | [购买](https://item.taobao.com/item.htm?id=574057911861) |
+| Type-C母座 16P |  | 1 | TYPE-C | [购买](https://item.taobao.com/item.htm?&id=573090887123) |
 | 220V转5V700mA电源模块 | 5V700mA | 1 | - | [购买](https://detail.tmall.com/item.htm?id=543443029399) |
 | 正泰DDSU666  | 5-80A  ModBus | 1 | - | [购买](https://item.taobao.com/item.htm?id=38682717986) |
 | 正泰模数化插座  | AC30-103 | 1 | - | [购买](https://item.taobao.com/item.htm?id=38332829590) |
+| ESP32-C3-WROOM-02-H4 |  | 1 | ESP32-C3-WROOM-02-H4 | [购买](https://item.taobao.com/item.htm?id=672590753429) |
 
 ### `焊接`
 
-按`PCB`标注焊接即可，注意`ESP-C3-13U`的焊接，缝隙很小，一定要对齐
+按`PCB`标注焊接即可，注意`C3`模块的焊接，缝隙很小，一定要对齐
 
 ## `软件`
 
@@ -61,18 +55,6 @@ substitutions:
 
 esphome:
   name: ${device_name}
-  platformio_options:
-    platform: https://github.com/tasmota/platform-espressif32.git#Tasmota/203
-    platform_packages:
-      - framework-arduinoespressif32@https://github.com/espressif/arduino-esp32.git#2.0.3
-    board_build.flash_mode: dio
-  on_boot:
-    - priority: 600
-      then:
-        - esp32_ble_tracker.stop_scan:
-    - priority: 200
-      then:
-        - esp32_ble_tracker.start_scan:
 
 esp32:
   board: esp32-c3-devkitm-1
@@ -82,7 +64,8 @@ esp32:
 logger:
 
 api:
-  password: !secret api_password
+  encryption: 
+    key: !secret api_encryption_key
 
 ota:
   password: !secret ota_password
@@ -105,8 +88,8 @@ time:
   
 uart:
   id: ${device_name}_uart
-  rx_pin: 18
-  tx_pin: 19
+  rx_pin: 5
+  tx_pin: 4
   baud_rate: 9600
   data_bits: 8
   stop_bits: 1
@@ -123,11 +106,24 @@ modbus_controller:
     setup_priority: -10
     update_interval: 10s
 
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ${device_name}_ip
+    mac_address:
+      name: ${device_name}_mac
+
 sensor:
+  - platform: uptime
+    name: ${device_name}_uptime
+  - platform: wifi_signal
+    name: ${device_name}_signal
+    update_interval: 60s
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_u
-    name: U
+    id: ${device_name}_u
+    name: ${device_name}_u
     address: 0x2000
     register_count: 2
     unit_of_measurement: V
@@ -138,8 +134,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_i
-    name: I
+    id: ${device_name}_i
+    name: ${device_name}_i
     address: 0x2002
     register_count: 2
     unit_of_measurement: A
@@ -150,8 +146,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_p
-    name: P
+    id: ${device_name}_p
+    name: ${device_name}_p
     address: 0x2004
     register_count: 2
     unit_of_measurement: W
@@ -164,8 +160,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_q
-    name: Q
+    id: ${device_name}_q
+    name: ${device_name}_q
     address: 0x2006
     register_count: 2
     unit_of_measurement: var
@@ -178,8 +174,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_s
-    name: S
+    id: ${device_name}_s
+    name: ${device_name}_s
     address: 0x2008
     register_count: 2
     unit_of_measurement: VA
@@ -192,8 +188,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_pf
-    name: PF
+    id: ${device_name}_pf
+    name: ${device_name}_pf
     address: 0x200A
     register_count: 2
     register_type: holding
@@ -203,8 +199,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_freq
-    name: Freq
+    id: ${device_name}_freq
+    name: ${device_name}_freq
     address: 0x200E
     register_count: 2
     unit_of_measurement: Hz
@@ -214,8 +210,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_ep
-    name: Ep
+    id: ${device_name}_ep
+    name: ${device_name}_ep
     address: 0x4000
     register_count: 2
     unit_of_measurement: kWh
@@ -228,24 +224,7 @@ sensor:
       - median:
           window_size: 3
           send_every: 3
-
-# 重置Ep 群友提供未验证
-switch:
-  - platform: modbus_controller
-    modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_ep_reset
-    name: Ep_Reset
-    custom_command: [0x01, 0x10, 0x00, 0x02, 0x00, 0x01, 0x02, 0x00, 0x01]
 ```
-
-### `固件`
-
-请参考 [ESPMMW](https://github.com/liwei19920307/ESPMMW/blob/main/README.md#%E6%95%99%E7%A8%8B) 
-
-### `HASS`
-
-打开`HA`管理界面（默认端口`8123`），点击配置，集成，添加集成，搜`ESPHome`，输入`IP`，`#api密码#`就可以接入模块了。能源里添加如下图
-![HASS_1](./img/HASS_1.png)
 
 ### `Modbus-RTU`
 
@@ -257,17 +236,9 @@ switch:
 
 [DDSU666说明书](https://github.com/liwei19920307/ESP485/tree/main/doc/DDSU666.pdf)
 
-## `DIY`
-
-请参考之前`DIY`的[步骤](https://github.com/liwei19920307/S5in1#%E6%AD%A5%E9%AA%A4)
-
 ### `注意`
 
-1、`EPS-C3-13U`进入下载模式只需要通电前将`IO9`接地，接法如下图
-
-![TTL](./img/TTL.png)
-
-2、外壳和变压器安装注意做好绝缘
+外壳和变压器安装注意做好绝缘
 
 ![INSTALL_1](./img/INSTALL_1.png)
 
