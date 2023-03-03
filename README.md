@@ -61,18 +61,6 @@ substitutions:
 
 esphome:
   name: ${device_name}
-  platformio_options:
-    platform: https://github.com/tasmota/platform-espressif32.git#Tasmota/203
-    platform_packages:
-      - framework-arduinoespressif32@https://github.com/espressif/arduino-esp32.git#2.0.3
-    board_build.flash_mode: dio
-  on_boot:
-    - priority: 600
-      then:
-        - esp32_ble_tracker.stop_scan:
-    - priority: 200
-      then:
-        - esp32_ble_tracker.start_scan:
 
 esp32:
   board: esp32-c3-devkitm-1
@@ -82,7 +70,8 @@ esp32:
 logger:
 
 api:
-  password: !secret api_password
+  encryption: 
+    key: !secret api_encryption_key
 
 ota:
   password: !secret ota_password
@@ -123,11 +112,24 @@ modbus_controller:
     setup_priority: -10
     update_interval: 10s
 
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ${device_name}_ip
+    mac_address:
+      name: ${device_name}_mac
+
 sensor:
+  - platform: uptime
+    name: ${device_name}_uptime
+  - platform: wifi_signal
+    name: ${device_name}_signal
+    update_interval: 60s
+
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_u
-    name: U
+    id: ${device_name}_u
+    name: ${device_name}_u
     address: 0x2000
     register_count: 2
     unit_of_measurement: V
@@ -138,8 +140,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_i
-    name: I
+    id: ${device_name}_i
+    name: ${device_name}_i
     address: 0x2002
     register_count: 2
     unit_of_measurement: A
@@ -150,8 +152,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_p
-    name: P
+    id: ${device_name}_p
+    name: ${device_name}_p
     address: 0x2004
     register_count: 2
     unit_of_measurement: W
@@ -164,8 +166,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_q
-    name: Q
+    id: ${device_name}_q
+    name: ${device_name}_q
     address: 0x2006
     register_count: 2
     unit_of_measurement: var
@@ -178,8 +180,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_s
-    name: S
+    id: ${device_name}_s
+    name: ${device_name}_s
     address: 0x2008
     register_count: 2
     unit_of_measurement: VA
@@ -192,8 +194,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_pf
-    name: PF
+    id: ${device_name}_pf
+    name: ${device_name}_pf
     address: 0x200A
     register_count: 2
     register_type: holding
@@ -203,8 +205,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_freq
-    name: Freq
+    id: ${device_name}_freq
+    name: ${device_name}_freq
     address: 0x200E
     register_count: 2
     unit_of_measurement: Hz
@@ -214,8 +216,8 @@ sensor:
     
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_ep
-    name: Ep
+    id: ${device_name}_ep
+    name: ${device_name}_ep
     address: 0x4000
     register_count: 2
     unit_of_measurement: kWh
@@ -228,14 +230,6 @@ sensor:
       - median:
           window_size: 3
           send_every: 3
-
-# 重置Ep 群友提供未验证
-switch:
-  - platform: modbus_controller
-    modbus_controller_id: ${device_name}_modbus_controller
-    id: ${device_name}_modbus_ep_reset
-    name: Ep_Reset
-    custom_command: [0x01, 0x10, 0x00, 0x02, 0x00, 0x01, 0x02, 0x00, 0x01]
 ```
 
 ### `固件`
