@@ -46,7 +46,7 @@
 
 ### `ESPHome`
 
-这里[参考](https://github.com/martgras/esphome/wiki)
+直接采集[参考](https://github.com/martgras/esphome/wiki)
 
 ```yaml
 substitutions:
@@ -118,6 +118,9 @@ sensor:
   - platform: wifi_signal
     name: ${device_name}_signal
     update_interval: 60s
+  - platform: internal_temperature
+    id: ${device_name}_cpu_temprature 
+    name: ${device_name}_cpu_temprature
 
   - platform: modbus_controller
     modbus_controller_id: ${device_name}_modbus_controller
@@ -223,6 +226,88 @@ sensor:
       - median:
           window_size: 3
           send_every: 3
+```
+
+透传模式
+
+通过`ESP`的`IP`和端口`666`透传数据，测试工具可以使用`SSCOM`
+
+```yaml
+substitutions:
+  device_name: esp485_stream
+
+esphome:
+  name: ${device_name}
+
+external_components:
+  - source: github://liwei19920307/esphome-stream-server
+    components: [stream_server]
+
+stream_server:
+   port: 666
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+logger:
+
+api:
+  encryption: 
+    key: !secret api_encryption_key
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: on
+
+web_server:
+  port: 80
+
+button:
+  - platform: restart
+    name: ${device_name}_reboot  
+
+time:
+  - platform: sntp
+    id: ${device_name}_time
+  
+uart:
+  id: ${device_name}_uart
+  rx_pin: 5
+  tx_pin: 4
+  baud_rate: 9600
+  data_bits: 8
+  stop_bits: 1
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ${device_name}_ip
+    mac_address:
+      name: ${device_name}_mac
+
+sensor:
+  - platform: uptime
+    name: ${device_name}_uptime
+  - platform: wifi_signal
+    name: ${device_name}_signal
+    update_interval: 60s
+  - platform: internal_temperature
+    id: ${device_name}_cpu_temprature 
+    name: ${device_name}_cpu_temprature
+  - platform: stream_server
+    connection_count:
+      name: ${device_name}_connection_count
+
+binary_sensor:
+  - platform: stream_server
+    connected:
+      name: ${device_name}_connected
 ```
 
 ### `Modbus-RTU`
