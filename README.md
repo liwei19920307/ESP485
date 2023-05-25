@@ -312,7 +312,7 @@
         name: ${device_name}_connected
   ```
 
-### Modbus-RTU
+## Modbus-RTU
 
 Modbus 一般分 Modbus-TCP 和 Modbus-RTU 两个种，收发报文有所区别，这里不做过多介绍网上资料很多。我这里介绍 Modbus-RTU 的，Modbus-TCP 由于没有设备无法测试。一般设备厂商设备说明书里都会提供地址说明（有的可以从官网下到），直接看图
 
@@ -322,7 +322,7 @@ Modbus 一般分 Modbus-TCP 和 Modbus-RTU 两个种，收发报文有所区别�
 
 [DDSU666 说明书](https://github.com/liwei19920307/ESP485/tree/main/doc/DDSU666.pdf)
 
-### 注意
+## 注意
 
 外壳和变压器安装注意做好绝缘
 
