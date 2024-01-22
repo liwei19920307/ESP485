@@ -1,0 +1,352 @@
+esphome:
+  name: meter-dtsu666
+  friendly_name: meter-dtsu666
+
+esp8266:
+  board: esp01_1m
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "#########"  #需要替换的字段
+
+ota:
+  password: "########"  #需要替换的字段
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Meter-Dtsu666 Fallback Hotspot"
+    password: "0Ssqzmbjravu"
+
+# Enable Web server
+web_server:
+  port: 80
+
+captive_portal:
+###
+
+
+globals:
+  - id: chint_energy_cal
+    type: std::uint32_t
+    restore_value: yes
+    initial_value: '0'
+
+uart:
+  id: mod_bus
+  tx_pin: GPIO13 # connected to tx on modbus converter
+  rx_pin: GPIO12 # connected to rx on modbus converter
+  baud_rate: 9600
+  stop_bits: 1
+  data_bits: 8
+
+modbus:
+  send_wait_time: 2000ms
+  id: modbus1
+
+#address chint dtsu666 
+modbus_controller:
+    address: 0x1
+    modbus_id: modbus1
+    update_interval: 1s
+    setup_priority: -10
+    command_throttle: 20ms
+
+sensor:
+
+ - platform: modbus_controller
+   id: chint_voltage_a
+   name: "chint voltage phase 1"
+   address: 0x2006
+   unit_of_measurement: "V"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 1
+   filters:
+     - multiply: 0.1
+
+ - platform: modbus_controller
+   id: chint_voltage_b
+   name: "chint voltage phase 2"
+   address: 0x2008
+   unit_of_measurement: "V"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 1
+   filters:
+     - multiply: 0.1
+
+ - platform: modbus_controller
+   id: chint_voltage_c
+   name: "chint voltage phase 3"
+   address: 0x200A
+   unit_of_measurement: "V"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 1
+   filters:
+     - multiply: 0.1
+    
+ - platform: modbus_controller
+   id: chint_current_a
+   name: "chint current phase 1"
+   address: 0x200C
+   unit_of_measurement: "A"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 2
+   filters:
+     - multiply: 0.01
+
+ - platform: modbus_controller
+   id: chint_current_b
+   name: "chint current phase 2"
+   address: 0x200E
+   unit_of_measurement: "A"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 2
+   filters:
+     - multiply: 0.01
+
+ - platform: modbus_controller
+   id: chint_current_c
+   name: "chint current phase 3"
+   address: 0x2010
+   unit_of_measurement: "A"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 2
+   filters:
+     - multiply: 0.01
+
+ - platform: modbus_controller
+   id: chint_frequency
+   name: "chint frequency"
+   address: 0x2044
+   unit_of_measurement: "Hz"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 2
+   filters:
+     - multiply: 0.01
+
+ - platform: modbus_controller
+   id: chint_voltage_a_to_b
+   name: "chint voltage phase 1 to 2"
+   address: 0x2000
+   unit_of_measurement: "V"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 1
+   filters:
+     - multiply: 0.1
+
+ - platform: modbus_controller
+   id: chint_voltage_c_to_b
+   name: "chint voltage phase 2 to 3"
+   address: 0x2002
+   unit_of_measurement: "V"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 1
+   filters:
+     - multiply: 0.1
+
+ - platform: modbus_controller
+   id: chint_voltage_a_to_c
+   name: "chint voltage phase 3 to 1"
+   address: 0x2004
+   unit_of_measurement: "V"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 1
+   filters:
+     - multiply: 0.1
+
+ - platform: modbus_controller
+   id: chint_active_power_total
+   name: "chint active power total"
+   address: 0x2012
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_active_power_phase_a
+   name: "chint active power phase 1"
+   address: 0x2014
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_active_power_phase_b
+   name: "chint active power phase 2"
+   address: 0x2016
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_active_power_phase_c
+   name: "chint active power phase 3"
+   address: 0x2018
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_reactive_power_total
+   name: "chint reactive power total"
+   address: 0x201A
+   unit_of_measurement: "VAR"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_reactive_power_phase_a
+   name: "chint reactive power phase 1"
+   address: 0x201C
+   unit_of_measurement: "VAR"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_reactive_power_phase_b
+   name: "chint reactive power phase 2"
+   address: 0x201E
+   unit_of_measurement: "VAR"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_reactive_power_phase_c
+   name: "chint reactive power phase 3"
+   address: 0x2020
+   unit_of_measurement: "VAR"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 0
+   force_new_range: true
+
+ - platform: modbus_controller
+   id: chint_forward_energy_total
+   name: "chint energy total from grid"
+   address: 0x1028
+   unit_of_measurement: "kWh"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 2
+   filters:
+     - multiply: 0.01
+     - lambda: |-
+            float MAX_DIFFERENCE = 1.0;  // adjust this!
+            static float last_value = NAN;
+            if (isnan(last_value) || std::abs(x - last_value) < MAX_DIFFERENCE)
+              return last_value = x;
+            else
+              return {};
+ - platform: modbus_controller
+   id: chint_reversing_energy_total
+   name: "chint energy total to grid"
+   address: 0x101E
+   unit_of_measurement: "kWh"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 2
+   filters:
+     - multiply: 0.01
+     - lambda: |-
+            float MAX_DIFFERENCE = 1.0;  // adjust this!
+            static float last_value = NAN;
+            if (isnan(last_value) || std::abs(x - last_value) < MAX_DIFFERENCE)
+              return last_value = x;
+            else
+              return {};
+
+ - platform: modbus_controller
+   id: chint_power_factor_total
+   name: "chint power factor total"
+   address: 0x202A
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
+
+ - platform: modbus_controller
+   id: chint_power_factor_phase_a
+   name: "chint power factor phase 1"
+   address: 0x202C
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
+
+ - platform: modbus_controller
+   id: chint_power_factor_phase_b
+   name: "chint power factor phase 2"
+   address: 0x202E
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
+
+ - platform: modbus_controller
+   id: chint_power_factor_phase_c
+   name: "chint power factor phase 3"
+   address: 0x2030
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: FP32
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
+
+# Todo: use correct sensor name and mark the original sensor as internal
+ - platform: template
+   name: "Total Energy"
+   id: "energy_total"
+   accuracy_decimals: 2
+   unit_of_measurement: "kWh"
+   device_class: energy
+   state_class: measurement
+   icon: mdi:total_increasing
+   lambda: |-
+       return (id(chint_forward_energy_total).state - id(chint_reversing_energy_total));
+#   update_interval: 15s
+
+
+# Todo: Test lambda!
+button:
+  - platform: template
+    name: "Chin Chin reset total energy"
+    entity_category: "config"
+    on_press:
+      then:
+        - lambda: |-
+            id(chint_energy_cal) = id(chint_forward_energy_total).state;
+  - platform: safe_mode
+    name: "Chin Chin Restart (Safe Mode)"
+  - platform: restart
+    name: "Chin Chin Restart"    

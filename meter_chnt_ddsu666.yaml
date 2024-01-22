@@ -1,0 +1,195 @@
+esphome:
+  name: meter-chnt
+  friendly_name: meter-chnt
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  
+ota:
+  password: "******************"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "meter_chnt_ddsu666"
+    password: "********"
+
+captive_portal:
+
+time:
+  - platform: sntp
+    id: esp485_time
+  
+uart:
+  id: esp485_uart
+  rx_pin: 18
+  tx_pin: 19
+  baud_rate: 9600
+  data_bits: 8
+  stop_bits: 1
+
+modbus:
+  send_wait_time: 500ms
+  id: esp485_modbus
+  uart_id: esp485_uart
+  
+
+modbus_controller:
+  - id: esp485_modbus_controller
+    modbus_id: esp485_modbus
+    address: 0x1  #设备地址码（一般是1根据实际情况填）#
+    command_throttle: 200ms
+    setup_priority: -10
+    update_interval: 10s
+
+sensor:
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: "WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
+
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_u
+    name: "U"
+    address: 0x2000
+    register_count: 2
+    unit_of_measurement: "V"
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 1
+    device_class: voltage
+    
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_i
+    name: "I"
+    address: 0x2002
+    register_count: 2
+    unit_of_measurement: "A"
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 3
+    device_class: current
+    
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_p
+    name: "P"
+    address: 0x2004
+    register_count: 2
+    unit_of_measurement: "W"
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 1
+    filters:
+      - multiply: 1000
+    device_class: power
+    
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_q
+    name: "Q"
+    address: 0x2006
+    register_count: 2
+    unit_of_measurement: "var"
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 1
+    filters:
+      - multiply: 1000
+    device_class: power
+    
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_s
+    name: "S"
+    address: 0x2008
+    register_count: 2
+    unit_of_measurement: "VA"
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 1
+    filters:
+      - multiply: 1000
+    device_class: power
+    
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_pf
+    name: "PF"
+    address: 0x200A
+    register_count: 2
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 3
+    device_class: power_factor
+    
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_freq
+    name: "Freq"
+    address: 0x200E
+    register_count: 2
+    unit_of_measurement: "Hz"
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 2
+    
+  - platform: modbus_controller
+    modbus_controller_id: esp485_modbus_controller
+    id: esp485_modbus_ep
+    name: "Ep"
+    address: 0x4000
+    register_count: 2
+    unit_of_measurement: "kWh"
+    register_type: holding
+    value_type: FP32
+    accuracy_decimals: 2
+    device_class: energy
+    state_class: total_increasing
+    filters: # 增加了这个过滤器，防止有传输错误导致电能数量突然变大引起错误
+        - lambda: |-
+            float MAX_DIFFERENCE = 1.0;  // adjust this!
+            static float last_value = NAN;
+            if (isnan(last_value) || std::abs(x - last_value) < MAX_DIFFERENCE)
+              return last_value = x;
+            else
+              return {};
+    
+interval:
+  - interval: 2min
+    then:
+      - if:
+          condition:
+            or:
+              - not: wifi.connected
+              - lambda: 'return id(wifi_signal_db).state < -70;'
+          then:
+            - logger.log: WiFi signal is too weak or not connected. Reconnecting...
+            - wifi.disable
+            - delay: 5s
+            - wifi.enable
+
+
+web_server:
+  port: 80
