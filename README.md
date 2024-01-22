@@ -329,3 +329,9 @@ Modbus 一般分 Modbus-TCP 和 Modbus-RTU 两个种，收发报文有所区别�
 ![INSTALL_1](./img/INSTALL_1.png)
 
 ![INSTALL_2](./img/INSTALL_2.png)
+
+## 其他设备
+
+[DDSU666 三相](https://github.com/liwei19920307/ESP485/tree/main/doc/other/DDSU666-3PHASE)
+
+欢迎提交其他设备适配文件，麻烦按以上设备目录结构提交
