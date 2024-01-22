@@ -332,6 +332,6 @@ Modbus 一般分 Modbus-TCP 和 Modbus-RTU 两个种，收发报文有所区别�
 
 ## 其他设备
 
-[DDSU666 三相](https://github.com/liwei19920307/ESP485/tree/main/doc/other/DDSU666-3PHASE)
+[DDSU666 三相](https://github.com/liwei19920307/ESP485/tree/main/2.0/other/DDSU666-3PHASE)
 
 欢迎提交其他设备适配文件，麻烦按以上设备目录结构提交
