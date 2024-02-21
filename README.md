@@ -82,6 +82,9 @@
   button:
     - platform: restart
       name: ${device_name}_reboot
+    - platform: uart
+      name: ${device_name}_ep_reset
+      data: [0x01, 0x10, 0x00, 0x02, 0x00, 0x01, 0x02, 0x00, 0x01, 0x66, 0x72]
 
   time:
     - platform: sntp
