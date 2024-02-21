@@ -233,6 +233,11 @@
             send_every: 3
   ```
 
+  电量重置按钮的地址要和表地址一致
+
+  ![EpReset.jpg](./img/EpReset.jpg)
+  
+
 - 透传模式
 
   通过 ESP 的 IP 和端口 666 透传数据，测试工具可以使用 SSCOM
