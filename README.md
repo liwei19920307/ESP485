@@ -233,10 +233,13 @@
             send_every: 3
   ```
 
-  电量重置按钮的地址要和表地址一致
+  电量重置按钮的地址要和表地址一致，如果地址不是0x01，最后两位CRC校验码需要重新生成
 
   ![EpReset.jpg](./img/EpReset.jpg)
+
+  可以在这里生成[MODBUS CRC16](https://crccalc.com/?method=CRC-16/MODBUS)
   
+  ![CRC16.jpg](./img/CRC16.jpg)
 
 - 透传模式
 
